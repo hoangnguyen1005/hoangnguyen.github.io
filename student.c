@@ -159,7 +159,7 @@ int main() {
             case 5: updateStudent(students, n); break;
             case 6: saveToFile(students, n, FILENAME); break;
             case 7: loadFromFile(students, &n, FILENAME); break;
-            case 0: printf("👋 Exiting program.\n"); break;
+            case 0: printf(" Exiting program.\n"); break;
             default: printf("❗ Invalid choice!\n");
         }
     } while (choice != 0);
