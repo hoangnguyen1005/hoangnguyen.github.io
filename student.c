@@ -14,42 +14,45 @@ typedef struct {
 
 void printMenu() {
     printf("\n====== MENU ======\n");
-    printf("1. Thêm sinh viên\n");
-    printf("2. Hiển thị danh sách\n");
-    printf("3. Tìm sinh viên theo ID\n");
-    printf("4. Xoá sinh viên\n");
-    printf("5. Cập nhật sinh viên\n");
-    printf("6. Lưu vào file\n");
-    printf("7. Đọc từ file\n");
-    printf("0. Thoát\n");
+    printf("1. Add student\n");
+    printf("2. Show student list\n");
+    printf("3. Search student by ID\n");
+    printf("4. Delete student\n");
+    printf("5. Update student\n");
+    printf("6. Save to file\n");
+    printf("7. Load from file\n");
+    printf("0. Exit\n");
     printf("==================\n");
 }
 
 void addStudent(Student students[], int *n) {
     if (*n >= MAX) {
-        printf("Danh sách đầy!\n");
+        printf("❌ Student list is full!\n");
         return;
     }
 
     Student s;
-    printf("Nhập ID: "); scanf("%d", &s.id);
-    getchar();  // Xoá Enter
-    printf("Nhập tên: "); fgets(s.name, MAX_NAME, stdin);
+    printf("Enter ID: ");
+    scanf("%d", &s.id);
+    getchar();  // Clear newline
+    printf("Enter name: ");
+    fgets(s.name, MAX_NAME, stdin);
     s.name[strcspn(s.name, "\n")] = '\0';
-    printf("Nhập GPA: "); scanf("%f", &s.gpa);
+    printf("Enter GPA: ");
+    scanf("%f", &s.gpa);
 
     students[*n] = s;
     (*n)++;
-    printf("✅ Đã thêm sinh viên.\n");
+    printf("✅ Student added successfully.\n");
 }
 
 void showAll(Student students[], int n) {
     if (n == 0) {
-        printf("Danh sách trống.\n");
+        printf("❌ Student list is empty.\n");
         return;
     }
 
-    printf("\n%-5s %-20s %-5s\n", "ID", "Tên", "GPA");
+    printf("\n%-5s %-20s %-5s\n", "ID", "Name", "GPA");
     for (int i = 0; i < n; i++) {
         printf("%-5d %-20s %-5.2f\n", students[i].id, students[i].name, students[i].gpa);
     }
@@ -64,23 +67,23 @@ int findById(Student students[], int n, int id) {
 
 void searchStudent(Student students[], int n) {
     int id;
-    printf("Nhập ID cần tìm: ");
+    printf("Enter ID to search: ");
     scanf("%d", &id);
     int idx = findById(students, n, id);
     if (idx == -1) {
-        printf("❌ Không tìm thấy sinh viên.\n");
+        printf("❌ Student not found.\n");
     } else {
-        printf("✅ Tìm thấy: %d - %s - %.2f\n", students[idx].id, students[idx].name, students[idx].gpa);
+        printf("✅ Found: %d - %s - %.2f\n", students[idx].id, students[idx].name, students[idx].gpa);
     }
 }
 
 void deleteStudent(Student students[], int *n) {
     int id;
-    printf("Nhập ID cần xoá: ");
+    printf("Enter ID to delete: ");
     scanf("%d", &id);
     int idx = findById(students, *n, id);
     if (idx == -1) {
-        printf("❌ Không tìm thấy sinh viên.\n");
+        printf("❌ Student not found.\n");
         return;
     }
 
@@ -88,43 +91,46 @@ void deleteStudent(Student students[], int *n) {
         students[i] = students[i + 1];
     }
     (*n)--;
-    printf("✅ Đã xoá sinh viên.\n");
+    printf("✅ Student deleted successfully.\n");
 }
 
 void updateStudent(Student students[], int n) {
     int id;
-    printf("Nhập ID cần cập nhật: ");
+    printf("Enter ID to update: ");
     scanf("%d", &id);
     int idx = findById(students, n, id);
     if (idx == -1) {
-        printf("❌ Không tìm thấy sinh viên.\n");
+        printf("❌ Student not found.\n");
         return;
     }
 
     getchar();
-    printf("Nhập tên mới: "); fgets(students[idx].name, MAX_NAME, stdin);
+    printf("Enter new name: ");
+    fgets(students[idx].name, MAX_NAME, stdin);
     students[idx].name[strcspn(students[idx].name, "\n")] = '\0';
-    printf("Nhập GPA mới: "); scanf("%f", &students[idx].gpa);
-    printf("✅ Đã cập nhật sinh viên.\n");
+    printf("Enter new GPA: ");
+    scanf("%f", &students[idx].gpa);
+    printf("✅ Student updated successfully.\n");
 }
 
 void saveToFile(Student students[], int n, const char *filename) {
     FILE *f = fopen(filename, "w");
     if (!f) {
-        printf("❌ Không thể mở file để ghi.\n");
+        printf("❌ Unable to open file for writing.\n");
         return;
     }
+
     for (int i = 0; i < n; i++) {
         fprintf(f, "%d,%s,%.2f\n", students[i].id, students[i].name, students[i].gpa);
     }
     fclose(f);
-    printf("✅ Đã lưu vào file.\n");
+    printf("✅ Data saved to file.\n");
 }
 
 void loadFromFile(Student students[], int *n, const char *filename) {
     FILE *f = fopen(filename, "r");
     if (!f) {
-        printf("❌ Không thể mở file để đọc.\n");
+        printf("❌ Unable to open file for reading.\n");
         return;
     }
 
@@ -133,7 +139,7 @@ void loadFromFile(Student students[], int *n, const char *filename) {
         (*n)++;
     }
     fclose(f);
-    printf("✅ Đã đọc dữ liệu từ file.\n");
+    printf("✅ Data loaded from file.\n");
 }
 
 int main() {
@@ -143,7 +149,7 @@ int main() {
 
     do {
         printMenu();
-        printf("Chọn chức năng: ");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
         switch(choice) {
             case 1: addStudent(students, &n); break;
@@ -153,8 +159,8 @@ int main() {
             case 5: updateStudent(students, n); break;
             case 6: saveToFile(students, n, FILENAME); break;
             case 7: loadFromFile(students, &n, FILENAME); break;
-            case 0: printf("👋 Thoát chương trình.\n"); break;
-            default: printf("❗ Lựa chọn không hợp lệ!\n");
+            case 0: printf("👋 Exiting program.\n"); break;
+            default: printf("❗ Invalid choice!\n");
         }
     } while (choice != 0);
 
